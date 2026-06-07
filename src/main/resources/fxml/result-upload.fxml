@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="12"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sante.lims.controllers.ResultController">
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16" />
+    </padding>
+
+    <Label text="Result Upload And Validation" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+    <HBox spacing="8">
+        <TextField fx:id="requestIdField" promptText="Test request ID" prefWidth="170" />
+        <ComboBox fx:id="resultTypeComboBox" prefWidth="120" />
+        <Button text="Choose File" onAction="#chooseFile" />
+        <Label fx:id="selectedFileLabel" text="No file selected" />
+    </HBox>
+
+    <HBox spacing="8">
+        <Button text="Upload Result" onAction="#uploadResult" />
+        <Button text="Load Results" onAction="#loadResults" />
+        <Button text="Validate Selected" onAction="#validateSelectedResult" />
+    </HBox>
+
+    <TableView fx:id="resultTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="60" />
+            <TableColumn fx:id="filePathColumn" text="File Path" prefWidth="360" />
+            <TableColumn fx:id="typeColumn" text="Type" prefWidth="100" />
+            <TableColumn fx:id="validationColumn" text="Validation" prefWidth="150" />
+            <TableColumn fx:id="uploadedAtColumn" text="Uploaded At" prefWidth="200" />
+        </columns>
+    </TableView>
+</VBox>

@@ -17,7 +17,7 @@ public final class DatabaseConnection {
         Properties properties = loadProperties();
 
         String url = getConfigValue("DB_URL", properties.getProperty("db.url"));
-        String username = getConfigValue("DB_USERNAME", properties.getProperty("db.user"));
+        String username = getConfigValue("DB_USERNAME", getProperty(properties, "db.username", "db.user"));
         String password = getConfigValue("DB_PASSWORD", properties.getProperty("db.password"));
 
         return DriverManager.getConnection(url, username, password);
@@ -40,5 +40,15 @@ public final class DatabaseConnection {
     private static String getConfigValue(String environmentKey, String defaultValue) {
         String environmentValue = System.getenv(environmentKey);
         return environmentValue == null || environmentValue.isBlank() ? defaultValue : environmentValue;
+    }
+
+    private static String getProperty(Properties properties, String... keys) {
+        for (String key : keys) {
+            String value = properties.getProperty(key);
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return null;
     }
 }

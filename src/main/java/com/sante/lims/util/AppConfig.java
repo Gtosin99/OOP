@@ -24,4 +24,14 @@ public final class AppConfig {
     public static String get(String key) {
         return PROPERTIES.getProperty(key);
     }
+
+    public static String getFirst(String... keys) {
+        for (String key : keys) {
+            String value = PROPERTIES.getProperty(key);
+            if (value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return null;
+    }
 }

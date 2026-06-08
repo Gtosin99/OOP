@@ -11,7 +11,7 @@ public final class DatabaseUtil {
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 AppConfig.get("db.url"),
-                AppConfig.get("db.user"),
+                AppConfig.getFirst("db.username", "db.user"),
                 AppConfig.get("db.password")
         );
     }

@@ -1,0 +1,58 @@
+CREATE TABLE IF NOT EXISTS users (
+    id BIGSERIAL PRIMARY KEY,
+    full_name VARCHAR(120) NOT NULL,
+    email VARCHAR(160) NOT NULL UNIQUE,
+    password_hash VARCHAR(100) NOT NULL,
+    role VARCHAR(30) NOT NULL,
+    email_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    force_password_change BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS email_verification_token (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    token VARCHAR(120) NOT NULL UNIQUE,
+    expires_at TIMESTAMP NOT NULL,
+    used BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS test_catalog (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(120) NOT NULL,
+    category VARCHAR(80) NOT NULL,
+    price NUMERIC(12,2) NOT NULL,
+    tat_hours INTEGER NOT NULL,
+    result_format VARCHAR(30) NOT NULL,
+    active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS test_request (
+    id BIGSERIAL PRIMARY KEY,
+    customer_id BIGINT NOT NULL REFERENCES users(id),
+    test_id BIGINT NOT NULL REFERENCES test_catalog(id),
+    request_date TIMESTAMP NOT NULL DEFAULT NOW(),
+    expected_completion TIMESTAMP NOT NULL,
+    payment_status VARCHAR(20) NOT NULL,
+    sample_status VARCHAR(40) NOT NULL,
+    processing_status VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS lab_result (
+    id BIGSERIAL PRIMARY KEY,
+    request_id BIGINT NOT NULL REFERENCES test_request(id),
+    file_path TEXT NOT NULL,
+    file_type VARCHAR(40) NOT NULL,
+    validated BOOLEAN NOT NULL DEFAULT FALSE,
+    uploaded_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    validated_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS notifications (
+    id BIGSERIAL PRIMARY KEY,
+    customer_id BIGINT NOT NULL REFERENCES users(id),
+    subject VARCHAR(200) NOT NULL,
+    message TEXT NOT NULL,
+    read_flag BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);

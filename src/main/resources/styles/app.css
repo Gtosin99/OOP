@@ -1,0 +1,59 @@
+.root {
+    -fx-font-family: "Segoe UI";
+    -fx-background-color: linear-gradient(to bottom right, #f2f7f5, #dcefe8);
+}
+
+.top-bar {
+    -fx-background-color: #0d5d56;
+}
+
+.title {
+    -fx-font-size: 26px;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.meta-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #d7ece9;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #18453b;
+}
+
+.content-pane {
+    -fx-background-color: rgba(255, 255, 255, 0.88);
+}
+
+.button {
+    -fx-background-color: #1f7a6d;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 600;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+}
+
+.button:hover {
+    -fx-background-color: #19675c;
+}
+
+.primary-btn {
+    -fx-background-color: #c26d22;
+}
+
+.primary-btn:hover {
+    -fx-background-color: #a75d1d;
+}
+
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cde2dd;
+    -fx-border-radius: 6;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #dcefe8;
+}

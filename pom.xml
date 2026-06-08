@@ -58,7 +58,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.sante.lims.App</mainClass>
+                    <mainClass>com.sante.lims.LimsCustomerApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

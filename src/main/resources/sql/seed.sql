@@ -1,9 +1,13 @@
 INSERT INTO users(full_name, email, password_hash, role, email_verified, force_password_change)
 VALUES
-('Super Admin', 'admin@sante.com', '$2a$10$MtFZr2o9R5NQlR1zEzAwy.Sa6G6Kdb4waLFTdlF1YbfjJM7X5v3li', 'SUPER_ADMIN', TRUE, FALSE),
-('Lab Attendant', 'lab@sante.com', '$2a$10$qed3mp9JFEA/wJT3KpUROu2m41EHePAdXSZx.PQwyIB5/lkUjp.OC', 'LAB_ATTENDANT', TRUE, FALSE),
-('Demo Customer', 'customer@sante.com', '$2a$10$ypH328J3jgAqdHB.D1RP5uyCx.SC.V5uOHEMot7ibeOLFzY7ihR8q', 'CUSTOMER', TRUE, FALSE)
-ON CONFLICT (email) DO NOTHING;
+('Super Admin', 'admin@sante.com', '$2a$10$6uBlaHXZOSR6oHxsolnXJeqcCBiaJkiYrHzN0LJS.gvOi/2u.jsUK', 'SUPER_ADMIN', TRUE, FALSE),
+('Lab Attendant', 'lab@sante.com', '$2a$10$1ZJme22E8HJo9AAmYVUFcuC1vEuLXSwqZJLchzzrn1GGpthg8JMPW', 'LAB_ATTENDANT', TRUE, FALSE),
+('Demo Customer', 'customer@sante.com', '$2a$10$Llymtqm0OBg56FVeb1mODOZjZeQ4STB9LuoDxYcRQKP7X3jzIa7y2', 'CUSTOMER', TRUE, FALSE)
+ON CONFLICT (email) DO UPDATE
+SET password_hash = EXCLUDED.password_hash,
+    role = EXCLUDED.role,
+    email_verified = EXCLUDED.email_verified,
+    force_password_change = EXCLUDED.force_password_change;
 
 INSERT INTO test_catalog(name, category, price, tat_hours, result_format, active)
 VALUES

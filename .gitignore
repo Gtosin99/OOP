@@ -9,6 +9,7 @@ target/
 nbproject/private/
 build/
 dist/
+reports/
 
 .DS_Store
 Thumbs.db

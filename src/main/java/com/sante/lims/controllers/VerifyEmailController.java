@@ -1,6 +1,7 @@
 package com.sante.lims.controllers;
 
 import com.sante.lims.service.RegistrationService;
+import com.sante.lims.service.RegistrationService.RegistrationResult;
 import com.sante.lims.util.SceneNavigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -12,6 +13,18 @@ public class VerifyEmailController {
     @FXML private Label messageLabel;
 
     private final RegistrationService registrationService = new RegistrationService();
+
+    @FXML
+    public void initialize() {
+        RegistrationResult result = RegistrationService.getLastRegistrationResult();
+        if (result != null) {
+            emailField.setText(result.email());
+            if (!result.emailSent()) {
+                tokenField.setText(result.token());
+                messageLabel.setText(result.emailStatus());
+            }
+        }
+    }
 
     @FXML
     public void handleVerify() {

@@ -59,7 +59,11 @@ public class LabRequestService {
     public void markRequestAsPaid(int requestId, int verifiedBy) throws SQLException {
         String sql = """
                 UPDATE test_request
-                SET payment_status = 'PAID'
+                SET payment_status = 'PAID',
+                    processing_status = CASE
+                        WHEN processing_status = 'PENDING' THEN 'REQUESTED'
+                        ELSE processing_status
+                    END
                 WHERE id = ?
                 """;
 

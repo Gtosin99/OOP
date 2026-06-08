@@ -36,7 +36,7 @@
             <TableColumn fx:id="testColumn" text="Test" prefWidth="160" />
             <TableColumn fx:id="paymentColumn" text="Payment" prefWidth="100" />
             <TableColumn fx:id="expectedColumn" text="Expected Completion" prefWidth="170" />
-            <TableColumn fx:id="statusColumn" text="Status" prefWidth="150" />
+            <TableColumn fx:id="statusColumn" text="Processing Status" prefWidth="150" />
         </columns>
     </TableView>
 </VBox>

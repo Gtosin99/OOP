@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
 public final class SceneNavigator {
     private static Stage primaryStage;
@@ -24,6 +25,10 @@ public final class SceneNavigator {
             FXMLLoader loader = new FXMLLoader(SceneNavigator.class.getResource(fxmlPath));
             Parent root = loader.load();
             Scene scene = new Scene(root);
+            URL stylesheet = SceneNavigator.class.getResource("/styles/app.css");
+            if (stylesheet != null) {
+                scene.getStylesheets().add(stylesheet.toExternalForm());
+            }
             primaryStage.setTitle(title);
             primaryStage.setScene(scene);
             primaryStage.show();

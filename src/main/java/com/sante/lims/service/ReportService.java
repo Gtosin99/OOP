@@ -43,16 +43,20 @@ public class ReportService {
 
         Path file = reportsDir.resolve("result-history-customer-" + customerId + ".csv");
         try (BufferedWriter writer = Files.newBufferedWriter(file)) {
-            writer.write("Result ID,Request ID,Test Name,File Type,Validated At,File Path");
+            writer.write("Result ID,Request ID,Test Name,File Type,Payment Status,Access,Validated At,File Path");
             writer.newLine();
             for (LabResult result : results) {
-                writer.write(String.format("%d,%d,%s,%s,%s,%s",
+                String access = result.isPaid() ? "Available" : "Payment Required";
+                String filePath = result.isPaid() ? sanitize(result.getFilePath()) : "";
+                writer.write(String.format("%d,%d,%s,%s,%s,%s,%s,%s",
                         result.getId(),
                         result.getRequestId(),
                         sanitize(result.getTestName()),
                         result.getFileType(),
+                        result.getPaymentStatus(),
+                        access,
                         result.getValidatedAt() == null ? "" : result.getValidatedAt().format(DATE_FORMAT),
-                        sanitize(result.getFilePath())
+                        filePath
                 ));
                 writer.newLine();
             }

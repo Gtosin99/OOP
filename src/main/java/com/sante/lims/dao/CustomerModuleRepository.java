@@ -74,7 +74,7 @@ public class CustomerModuleRepository {
                     (customer_id, test_id, request_date, expected_completion, payment_status, sample_status, processing_status)
                 VALUES
                     (?, ?, NOW(), NOW() + (SELECT (tat_hours || ' hours')::interval FROM test_catalog WHERE id = ?),
-                     'UNPAID', 'COLLECTION_PENDING', 'PENDING')
+                     'UNPAID', 'COLLECTION_PENDING', 'REQUESTED')
                 RETURNING id
                 """;
 
@@ -145,7 +145,7 @@ public class CustomerModuleRepository {
     public List<LabResult> getValidatedResults(long customerId) throws SQLException {
         String sql = """
                 SELECT lr.id, lr.request_id, tc.name AS test_name, lr.file_path, lr.file_type,
-                       lr.validated, lr.validated_at
+                       tr.payment_status, lr.validated, lr.validated_at
                 FROM lab_result lr
                 JOIN test_request tr ON lr.request_id = tr.id
                 JOIN test_catalog tc ON tr.test_id = tc.id
@@ -166,6 +166,7 @@ public class CustomerModuleRepository {
                             rs.getString("test_name"),
                             rs.getString("file_path"),
                             rs.getString("file_type"),
+                            rs.getString("payment_status"),
                             rs.getBoolean("validated"),
                             toLocalDateTime(rs.getTimestamp("validated_at"))
                     ));

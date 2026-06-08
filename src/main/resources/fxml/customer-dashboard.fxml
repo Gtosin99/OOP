@@ -41,6 +41,7 @@
                 <Button text="Request History" onAction="#openHistory"/>
                 <Button text="Result Vault" onAction="#openVault"/>
                 <Button text="Refresh" onAction="#refreshDashboard"/>
+                <Button text="Log Out" onAction="#logout"/>
             </HBox>
 
             <Label text="Active Requests" styleClass="section-title"/>

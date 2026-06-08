@@ -8,16 +8,18 @@ public class LabResult {
     private String testName;
     private String filePath;
     private String fileType;
+    private String paymentStatus;
     private boolean validated;
     private LocalDateTime validatedAt;
 
     public LabResult(long id, long requestId, String testName, String filePath, String fileType,
-                     boolean validated, LocalDateTime validatedAt) {
+                     String paymentStatus, boolean validated, LocalDateTime validatedAt) {
         this.id = id;
         this.requestId = requestId;
         this.testName = testName;
         this.filePath = filePath;
         this.fileType = fileType;
+        this.paymentStatus = paymentStatus;
         this.validated = validated;
         this.validatedAt = validatedAt;
     }
@@ -40,6 +42,14 @@ public class LabResult {
 
     public String getFileType() {
         return fileType;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public boolean isPaid() {
+        return "PAID".equalsIgnoreCase(paymentStatus);
     }
 
     public boolean isValidated() {

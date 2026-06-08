@@ -44,7 +44,7 @@ public class RequestQueueController {
 
     @FXML
     public void initialize() {
-        paymentFilter.setItems(FXCollections.observableArrayList("ALL", "PENDING", "PAID", "UNPAID"));
+        paymentFilter.setItems(FXCollections.observableArrayList("ALL", "PAID", "UNPAID"));
         paymentFilter.setValue("ALL");
         statusFilter.setItems(FXCollections.observableArrayList(
                 "ALL", "REQUESTED", "SAMPLE_COLLECTED", "SAMPLE_PROCESSING", "SAMPLE_VALIDATED", "COMPLETED"));

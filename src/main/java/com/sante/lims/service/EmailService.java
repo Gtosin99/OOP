@@ -33,6 +33,10 @@ public class EmailService {
     }
 
     public void sendEmail(String to, String subject, String body) throws MessagingException {
+        if (!isConfigured()) {
+            throw new MessagingException("SMTP is not configured.");
+        }
+
         Session session = createSession();
         Message message = new MimeMessage(session);
         message.setFrom(new InternetAddress(AppConfig.get("smtp.from")));
@@ -40,6 +44,25 @@ public class EmailService {
         message.setSubject(subject);
         message.setText(body);
         Transport.send(message);
+    }
+
+    public boolean isConfigured() {
+        String host = AppConfig.get("smtp.host");
+        String username = AppConfig.get("smtp.username");
+        String password = AppConfig.get("smtp.password");
+        String from = AppConfig.get("smtp.from");
+
+        return hasValue(host)
+                && hasValue(username)
+                && hasValue(password)
+                && hasValue(from)
+                && !username.equalsIgnoreCase("your-email@example.com")
+                && !password.equalsIgnoreCase("your-app-password")
+                && !from.equalsIgnoreCase("your-email@example.com");
+    }
+
+    private boolean hasValue(String value) {
+        return value != null && !value.isBlank();
     }
 
     public void sendRegistrationVerificationRequired(String to, String token) throws MessagingException {

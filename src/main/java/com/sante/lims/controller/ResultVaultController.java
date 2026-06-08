@@ -38,6 +38,10 @@ public class ResultVaultController {
     @FXML
     private TableColumn<LabResult, String> colFileType;
     @FXML
+    private TableColumn<LabResult, String> colPaymentStatus;
+    @FXML
+    private TableColumn<LabResult, String> colAccessStatus;
+    @FXML
     private TableColumn<LabResult, String> colValidatedAt;
     @FXML
     private ImageView imagePreview;
@@ -57,6 +61,8 @@ public class ResultVaultController {
         colRequestId.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getRequestId())));
         colTestName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTestName()));
         colFileType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFileType()));
+        colPaymentStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPaymentStatus()));
+        colAccessStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isPaid() ? "Available" : "Payment Required"));
         colValidatedAt.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getValidatedAt() == null ? "" : data.getValue().getValidatedAt().format(DATE_FORMAT)
         ));
@@ -79,6 +85,9 @@ public class ResultVaultController {
             showInfo("Select a result", "Please select a result first.");
             return;
         }
+        if (!canAccessResult(selected)) {
+            return;
+        }
 
         Path file = Path.of(selected.getFilePath());
         if (!Files.exists(file)) {
@@ -98,6 +107,9 @@ public class ResultVaultController {
         LabResult selected = resultTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
             showInfo("Select a result", "Please select a result to download.");
+            return;
+        }
+        if (!canAccessResult(selected)) {
             return;
         }
 
@@ -134,6 +146,17 @@ public class ResultVaultController {
         } catch (SQLException | IOException e) {
             showError("Unable to export report", e.getMessage());
         }
+    }
+
+    private boolean canAccessResult(LabResult result) {
+        if (result.isPaid()) {
+            return true;
+        }
+        showInfo(
+                "Payment required",
+                "This result has been uploaded and validated, but it cannot be opened or downloaded until payment is marked as PAID."
+        );
+        return false;
     }
 
     @FXML

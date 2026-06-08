@@ -12,15 +12,16 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.sante.lims.controllers.LabAttendantController">
     <top>
-        <VBox spacing="8" style="-fx-background-color: #1f2937;">
+        <VBox spacing="8" styleClass="top-bar">
             <padding>
                 <Insets top="14" right="18" bottom="14" left="18" />
             </padding>
-            <Label text="Lab Attendant Operations" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;" />
+            <Label text="Lab Attendant Operations" styleClass="title" />
             <HBox spacing="10">
                 <Button text="Request Queue" onAction="#showRequestQueue" />
                 <Button text="Sample Tracking" onAction="#showSampleTracking" />
                 <Button text="Result Upload" onAction="#showResultUpload" />
+                <Button text="Log Out" onAction="#handleLogout" />
             </HBox>
         </VBox>
     </top>

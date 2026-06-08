@@ -6,6 +6,7 @@ import com.sante.lims.model.TestRequest;
 import com.sante.lims.service.CustomerService;
 import com.sante.lims.util.SceneNavigator;
 import com.sante.lims.util.SessionContext;
+import com.sante.lims.utils.SessionManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
@@ -116,6 +117,13 @@ public class CustomerController {
     @FXML
     private void refreshDashboard() {
         loadDashboard();
+    }
+
+    @FXML
+    private void logout() {
+        SessionContext.clear();
+        SessionManager.endSession();
+        SceneNavigator.switchScene("/fxml/login.fxml", "Sante LIMS - Login");
     }
 
     private void showError(String title, String message) {

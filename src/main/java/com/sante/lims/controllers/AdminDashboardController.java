@@ -2,6 +2,7 @@ package com.sante.lims.controllers;
 
 import com.sante.lims.services.AuditLogService;
 import com.sante.lims.util.SceneNavigator;
+import com.sante.lims.util.SessionContext;
 import com.sante.lims.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +31,7 @@ public class AdminDashboardController {
         } catch (Exception ignored) {
         }
         SessionManager.endSession();
+        SessionContext.clear();
         SceneNavigator.switchScene("/fxml/login.fxml", "Sante LIMS - Login");
     }
 

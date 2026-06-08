@@ -46,7 +46,9 @@
                     <TableColumn fx:id="colRequestId" text="Request ID" prefWidth="90"/>
                     <TableColumn fx:id="colTestName" text="Test Name" prefWidth="220"/>
                     <TableColumn fx:id="colFileType" text="Type" prefWidth="140"/>
-                    <TableColumn fx:id="colValidatedAt" text="Validated At" prefWidth="200"/>
+                    <TableColumn fx:id="colPaymentStatus" text="Payment" prefWidth="120"/>
+                    <TableColumn fx:id="colAccessStatus" text="Access" prefWidth="140"/>
+                    <TableColumn fx:id="colValidatedAt" text="Validated At" prefWidth="180"/>
                 </columns>
             </TableView>
 

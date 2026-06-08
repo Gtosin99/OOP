@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.mycompany.santelims.controllers.AdminDashboardController">
+    <left>
+        <VBox spacing="10" style="-fx-padding: 15;">
+            <Button text="Users" onAction="#showUsers" maxWidth="Infinity"/>
+            <Button text="Tests" onAction="#showTests" maxWidth="Infinity"/>
+            <Button text="Samples" onAction="#showSamples" maxWidth="Infinity"/>
+            <Button text="Audit Logs" onAction="#showAuditLogs" maxWidth="Infinity"/>
+            <Button text="Logout" onAction="#handleLogout" maxWidth="Infinity" style="-fx-text-fill: red;"/>
+        </VBox>
+    </left>
+    <center>
+        <StackPane fx:id="contentArea"/>
+    </center>
+</BorderPane>

@@ -1,36 +1,28 @@
 # Sante Laboratory Information Management System
 
-This repository contains the Maven JavaFX foundation for the Sante LIMS OOP project.
+JavaFX and PostgreSQL Laboratory Information Management System for Sante Diagnostics Ltd.
 
-## Team Workflow
+The merged root application includes:
 
-1. Pull the latest `main` branch before starting work.
-2. Create or switch to your assigned feature branch.
-3. Build your module using the shared packages and utilities in `src/main/java/com/sante/lims`.
-4. Do not change the database schema without discussing it with the team lead.
-5. Open a pull request back into `main` when your feature is ready.
-
-## Branch Allocation
-
-- `feature/auth-admin`: authentication, users, roles, email verification, audit logs
-- `feature/lab-operations`: test requests, samples, status history, result upload and validation
-- `feature/customer-module`: customer request flow, available tests, request tracking
+- Super Admin governance: user provisioning, custom test builder, request queue, and audit trail.
+- Lab Attendant operations: payment confirmation, sample lifecycle tracking, result upload, and result validation.
+- Customer transparency: self-registration, test catalog, request history, dashboard countdowns, result vault, and notifications.
 
 ## Project Structure
 
 ```text
 OOP/
-├── docs/
-├── src/
-│   └── main/
-│       ├── java/
-│       │   └── com/sante/lims/
-│       └── resources/
-├── uploads/
-│   ├── images/
-│   └── pdfs/
-├── pom.xml
-└── README.md
+|-- docs/
+|-- src/
+|   |-- main/
+|       |-- java/
+|       |   |-- com/sante/lims/
+|       |-- resources/
+|-- uploads/
+|   |-- images/
+|   |-- pdfs/
+|-- pom.xml
+|-- README.md
 ```
 
 ## Setup In Apache NetBeans
@@ -39,7 +31,7 @@ OOP/
 2. Select `File > Open Project`.
 3. Choose this repository folder.
 4. Let NetBeans load the Maven dependencies.
-5. Configure PostgreSQL using `src/main/resources/database.properties`.
+5. Configure PostgreSQL in `src/main/resources/application.properties`.
 6. Run the app with Maven or the NetBeans Run button.
 
 ## Database
@@ -48,13 +40,20 @@ Create a PostgreSQL database, then run:
 
 ```sql
 \i docs/database-schema.sql
+\i src/main/resources/sql/seed.sql
 ```
 
-Default connection settings are stored in `src/main/resources/database.properties`. They can also be overridden using environment variables:
+Default connection settings are stored in `src/main/resources/application.properties`. Lab-operation database access can also be overridden using environment variables:
 
 - `DB_URL`
 - `DB_USERNAME`
 - `DB_PASSWORD`
+
+## Demo Logins
+
+- Super Admin: `admin@sante.com` / `admin123`
+- Lab Attendant: `lab@sante.com` / `lab123`
+- Customer: `customer@sante.com` / `customer123`
 
 ## Build And Run
 

@@ -1,87 +1,89 @@
-CREATE TABLE roles (
-    id SERIAL PRIMARY KEY,
-    role_name VARCHAR(50) NOT NULL UNIQUE
-);
-
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    full_name VARCHAR(150) NOT NULL,
-    email VARCHAR(150) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    role_id INTEGER NOT NULL REFERENCES roles(id),
+CREATE TABLE IF NOT EXISTS users (
+    id BIGSERIAL PRIMARY KEY,
+    full_name VARCHAR(120) NOT NULL,
+    email VARCHAR(160) NOT NULL UNIQUE,
+    password_hash VARCHAR(100) NOT NULL,
+    role VARCHAR(30) NOT NULL,
     email_verified BOOLEAN NOT NULL DEFAULT FALSE,
     force_password_change BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE email_verifications (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    verification_token VARCHAR(255) NOT NULL UNIQUE,
+CREATE TABLE IF NOT EXISTS email_verification_token (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    token VARCHAR(120) NOT NULL UNIQUE,
     expires_at TIMESTAMP NOT NULL,
-    verified BOOLEAN NOT NULL DEFAULT FALSE
+    used BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE test_types (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(120) NOT NULL UNIQUE,
+CREATE TABLE IF NOT EXISTS test_catalog (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(120) NOT NULL,
     category VARCHAR(80) NOT NULL,
-    price NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
-    tat_hours INTEGER NOT NULL CHECK (tat_hours > 0),
-    result_format VARCHAR(30) NOT NULL
+    price NUMERIC(12,2) NOT NULL,
+    tat_hours INTEGER NOT NULL,
+    result_format VARCHAR(30) NOT NULL,
+    active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE test_requests (
-    id SERIAL PRIMARY KEY,
-    customer_id INTEGER NOT NULL REFERENCES users(id),
-    test_type_id INTEGER NOT NULL REFERENCES test_types(id),
-    payment_status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
-    request_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE IF NOT EXISTS test_request (
+    id BIGSERIAL PRIMARY KEY,
+    customer_id BIGINT NOT NULL REFERENCES users(id),
+    test_id BIGINT NOT NULL REFERENCES test_catalog(id),
+    request_date TIMESTAMP NOT NULL DEFAULT NOW(),
     expected_completion TIMESTAMP NOT NULL,
-    status VARCHAR(30) NOT NULL DEFAULT 'REQUESTED'
+    payment_status VARCHAR(20) NOT NULL,
+    sample_status VARCHAR(40) NOT NULL,
+    processing_status VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE samples (
-    id SERIAL PRIMARY KEY,
-    test_request_id INTEGER NOT NULL REFERENCES test_requests(id) ON DELETE CASCADE,
-    current_status VARCHAR(30) NOT NULL DEFAULT 'CREATED',
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE sample_status_history (
-    id SERIAL PRIMARY KEY,
-    sample_id INTEGER NOT NULL REFERENCES samples(id) ON DELETE CASCADE,
-    status VARCHAR(30) NOT NULL,
-    updated_by INTEGER NOT NULL REFERENCES users(id),
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE results (
-    id SERIAL PRIMARY KEY,
-    test_request_id INTEGER NOT NULL REFERENCES test_requests(id) ON DELETE CASCADE,
-    file_path VARCHAR(255) NOT NULL,
-    result_type VARCHAR(30) NOT NULL,
-    validation_status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
-    uploaded_by INTEGER NOT NULL REFERENCES users(id),
-    validated_by INTEGER REFERENCES users(id),
-    uploaded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE IF NOT EXISTS lab_result (
+    id BIGSERIAL PRIMARY KEY,
+    request_id BIGINT NOT NULL REFERENCES test_request(id),
+    file_path TEXT NOT NULL,
+    file_type VARCHAR(40) NOT NULL,
+    validated BOOLEAN NOT NULL DEFAULT FALSE,
+    uploaded_by BIGINT REFERENCES users(id),
+    validated_by BIGINT REFERENCES users(id),
+    uploaded_at TIMESTAMP NOT NULL DEFAULT NOW(),
     validated_at TIMESTAMP
 );
 
-CREATE TABLE audit_logs (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    action VARCHAR(100) NOT NULL,
-    description TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS notifications (
+    id BIGSERIAL PRIMARY KEY,
+    customer_id BIGINT NOT NULL REFERENCES users(id),
+    subject VARCHAR(200) NOT NULL,
+    message TEXT NOT NULL,
+    read_flag BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-INSERT INTO roles (role_name)
-VALUES ('ADMIN'), ('LAB_SCIENTIST'), ('CUSTOMER')
-ON CONFLICT (role_name) DO NOTHING;
+CREATE TABLE IF NOT EXISTS samples (
+    id BIGSERIAL PRIMARY KEY,
+    test_request_id BIGINT NOT NULL REFERENCES test_request(id),
+    current_status VARCHAR(40) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
 
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_test_requests_customer_id ON test_requests(customer_id);
-CREATE INDEX idx_samples_test_request_id ON samples(test_request_id);
-CREATE INDEX idx_results_test_request_id ON results(test_request_id);
-CREATE INDEX idx_audit_logs_user_id ON audit_logs(user_id);
+CREATE TABLE IF NOT EXISTS sample_status_history (
+    id BIGSERIAL PRIMARY KEY,
+    sample_id BIGINT NOT NULL REFERENCES samples(id),
+    status VARCHAR(40) NOT NULL,
+    updated_by BIGINT REFERENCES users(id),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
+    action VARCHAR(80) NOT NULL,
+    description TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_test_request_customer_id ON test_request(customer_id);
+CREATE INDEX IF NOT EXISTS idx_samples_test_request_id ON samples(test_request_id);
+CREATE INDEX IF NOT EXISTS idx_lab_result_request_id ON lab_result(request_id);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_user_id ON audit_logs(user_id);

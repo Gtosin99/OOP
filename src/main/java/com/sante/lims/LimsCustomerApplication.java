@@ -9,7 +9,7 @@ public class LimsCustomerApplication extends Application {
     @Override
     public void start(Stage stage) {
         SceneNavigator.initialize(stage);
-        SceneNavigator.switchScene("/fxml/customer-dashboard.fxml", "Sante LIMS - Customer Dashboard");
+        SceneNavigator.switchScene("/fxml/login.fxml", "Sante LIMS - Login");
     }
 
     public static void main(String[] args) {

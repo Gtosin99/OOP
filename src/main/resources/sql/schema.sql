@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS lab_result (
     file_path TEXT NOT NULL,
     file_type VARCHAR(40) NOT NULL,
     validated BOOLEAN NOT NULL DEFAULT FALSE,
+    uploaded_by BIGINT REFERENCES users(id),
+    validated_by BIGINT REFERENCES users(id),
     uploaded_at TIMESTAMP NOT NULL DEFAULT NOW(),
     validated_at TIMESTAMP
 );
@@ -54,5 +56,28 @@ CREATE TABLE IF NOT EXISTS notifications (
     subject VARCHAR(200) NOT NULL,
     message TEXT NOT NULL,
     read_flag BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS samples (
+    id BIGSERIAL PRIMARY KEY,
+    test_request_id BIGINT NOT NULL REFERENCES test_request(id),
+    current_status VARCHAR(40) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS sample_status_history (
+    id BIGSERIAL PRIMARY KEY,
+    sample_id BIGINT NOT NULL REFERENCES samples(id),
+    status VARCHAR(40) NOT NULL,
+    updated_by BIGINT REFERENCES users(id),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
+    action VARCHAR(80) NOT NULL,
+    description TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

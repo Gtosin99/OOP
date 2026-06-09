@@ -24,6 +24,9 @@ public class AuthService {
             if (user == null || !PasswordUtil.verifyPassword(password, user.getPasswordHash())) {
                 return LoginResult.failure("Invalid email or password.");
             }
+            if (!user.isEmailVerified()) {
+                return LoginResult.failure("Please verify your account before logging in.");
+            }
 
             SessionManager.startSession(user);
             SessionContext.setCurrentUser(user.getId(), user.getEmail(), user.getRole());

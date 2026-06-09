@@ -74,8 +74,54 @@ public class UserDao {
     }
 
     public void deleteUser(long userId) throws SQLException {
-        try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement("DELETE FROM users WHERE id = ?")) {
+        try (Connection conn = DatabaseUtil.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                executeUserCleanup(conn, "DELETE FROM email_verification_token WHERE user_id = ?", userId);
+                executeUserCleanup(conn, "DELETE FROM notifications WHERE customer_id = ?", userId);
+                executeUserCleanup(conn, """
+                        DELETE FROM sample_status_history
+                        WHERE sample_id IN (
+                            SELECT s.id
+                            FROM samples s
+                            JOIN test_request tr ON tr.id = s.test_request_id
+                            WHERE tr.customer_id = ?
+                        )
+                        """, userId);
+                executeUserCleanup(conn, """
+                        DELETE FROM samples
+                        WHERE test_request_id IN (
+                            SELECT id
+                            FROM test_request
+                            WHERE customer_id = ?
+                        )
+                        """, userId);
+                executeUserCleanup(conn, """
+                        DELETE FROM lab_result
+                        WHERE request_id IN (
+                            SELECT id
+                            FROM test_request
+                            WHERE customer_id = ?
+                        )
+                        """, userId);
+                executeUserCleanup(conn, "DELETE FROM test_request WHERE customer_id = ?", userId);
+
+                executeUserCleanup(conn, "UPDATE lab_result SET uploaded_by = NULL WHERE uploaded_by = ?", userId);
+                executeUserCleanup(conn, "UPDATE lab_result SET validated_by = NULL WHERE validated_by = ?", userId);
+                executeUserCleanup(conn, "UPDATE sample_status_history SET updated_by = NULL WHERE updated_by = ?", userId);
+                executeUserCleanup(conn, "DELETE FROM audit_logs WHERE user_id = ?", userId);
+                executeUserCleanup(conn, "DELETE FROM users WHERE id = ?", userId);
+
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw ex;
+            }
+        }
+    }
+
+    private void executeUserCleanup(Connection conn, String sql, long userId) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, userId);
             ps.executeUpdate();
         }

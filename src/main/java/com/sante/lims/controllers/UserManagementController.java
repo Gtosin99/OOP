@@ -73,8 +73,16 @@ public class UserManagementController {
             messageLabel.setText("Select a user to delete.");
             return;
         }
+        User current = SessionManager.getCurrentUser();
+        if (current != null && current.getId() == selected.getId()) {
+            messageLabel.setText("You cannot delete your own account while signed in.");
+            return;
+        }
+        if ("SUPER_ADMIN".equals(selected.getRole())) {
+            messageLabel.setText("Super admin accounts cannot be deleted from this screen.");
+            return;
+        }
         try {
-            User current = SessionManager.getCurrentUser();
             auditLogService.logAction(current == null ? null : current.getId(), "USER_DELETED",
                     "Deleted user account " + selected.getEmail());
             userDao.deleteUser(selected.getId());

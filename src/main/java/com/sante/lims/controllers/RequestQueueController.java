@@ -47,7 +47,7 @@ public class RequestQueueController {
         paymentFilter.setItems(FXCollections.observableArrayList("ALL", "PAID", "UNPAID"));
         paymentFilter.setValue("ALL");
         statusFilter.setItems(FXCollections.observableArrayList(
-                "ALL", "REQUESTED", "SAMPLE_COLLECTED", "SAMPLE_PROCESSING", "SAMPLE_VALIDATED", "COMPLETED"));
+                "ALL", "REQUESTED", "SAMPLE_COLLECTED", "PROCESSING", "VALIDATED", "READY_FOR_RESULT"));
         statusFilter.setValue("ALL");
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));

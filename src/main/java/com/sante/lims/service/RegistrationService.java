@@ -14,7 +14,7 @@ public class RegistrationService {
 
     public RegistrationResult selfRegister(String fullName, String email, String plainPassword) throws Exception {
         String hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
-        String token = UUID.randomUUID().toString();
+        String token = String.valueOf((int)(Math.random() * 900000) + 100000);
 
         long userId = repository.createCustomerSelfRegistration(fullName, email, hashedPassword, token);
         boolean emailSent = true;

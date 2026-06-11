@@ -20,6 +20,8 @@ public class EmailService {
         props.put("mail.smtp.port", AppConfig.get("smtp.port"));
         props.put("mail.smtp.auth", AppConfig.get("smtp.auth"));
         props.put("mail.smtp.starttls.enable", AppConfig.get("smtp.starttls"));
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
 
         final String username = AppConfig.get("smtp.username");
         final String password = AppConfig.get("smtp.password");
@@ -43,7 +45,12 @@ public class EmailService {
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
         message.setSubject(subject);
         message.setText(body);
-        Transport.send(message);
+        try {
+    Transport.send(message);
+} catch (MessagingException e) {
+    e.printStackTrace();
+    throw e;
+}
     }
 
     public boolean isConfigured() {
@@ -59,6 +66,8 @@ public class EmailService {
                 && !username.equalsIgnoreCase("your-email@example.com")
                 && !password.equalsIgnoreCase("your-app-password")
                 && !from.equalsIgnoreCase("your-email@example.com");
+        
+        
     }
 
     private boolean hasValue(String value) {
